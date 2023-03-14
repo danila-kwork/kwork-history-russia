@@ -210,6 +210,18 @@ fun WithdrawalRequestsScreen(
                         )
 
                         Text(
+                            text = "Рефералка: ${item.referralLinkMoney}",
+                            color = primaryText,
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .pointerInput(Unit) {
+                                    detectTapGestures(onLongPress = {
+                                        setClipboard(context, item.referralLinkMoney.toString())
+                                    })
+                                }
+                        )
+
+                        Text(
                             text = "Vpn: ${if(item.vpn) "Да" else "Нет"}",
                             color = primaryText,
                             modifier = Modifier
@@ -231,7 +243,8 @@ fun WithdrawalRequestsScreen(
                                 countRewardedAdsClick = item.countRewardedAdsClick,
                                 countBannerAds = 0,
                                 countBannerAdsClick = 0,
-                                achievementPrice = item.achievementPrice
+                                achievementPrice = item.achievementPrice,
+                                referralLinkMoney = item.referralLinkMoney
                             )
 
                             Text(

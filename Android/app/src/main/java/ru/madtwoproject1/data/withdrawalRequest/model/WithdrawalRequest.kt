@@ -16,6 +16,7 @@ data class WithdrawalRequest(
     val countRewardedAdsClick: Int = 0,
     val version: Int? = 1,
     val achievementPrice: Double = 0.0,
+    val referralLinkMoney: Double = 0.0,
     val vpn: Boolean = false,
     val status: WithdrawalRequestStatus = WithdrawalRequestStatus.WAITING
 ){
@@ -31,6 +32,7 @@ data class WithdrawalRequest(
         map["countRewardedAds"] = countRewardedAds
         map["countRewardedAdsClick"] = countRewardedAdsClick
         map["achievementPrice"] = achievementPrice
+        map["referralLinkMoney"] = referralLinkMoney
         map["vpn"] = vpn
         map["status"] = status
         version?.let {

@@ -101,7 +101,8 @@ fun AdsScreen(
                     countInterstitialAdsClick = user?.countInterstitialAdsClick ?: 0,
                     countRewardedAds = user?.countRewardedAds ?: 0,
                     countRewardedAdsClick = user?.countRewardedAdsClick ?: 0,
-                    achievementPrice = user?.achievementPrice ?: 0.0
+                    achievementPrice = user?.achievementPrice ?: 0.0,
+                    referralLinkMoney = user?.referralLinkMoney ?: 0.0
                 ).toString(),
                 width = (screenWidthDp / 2).toDouble(),
                 height = (screenHeightDp / 10).toDouble()

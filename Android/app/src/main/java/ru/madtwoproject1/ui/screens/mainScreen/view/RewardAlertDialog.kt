@@ -32,6 +32,7 @@ fun RewardAlertDialog(
     countRewardedAds:Int,
     countRewardedAdsClick:Int,
     achievementPrice: Double,
+    referralLinkMoney: Double,
     onDismissRequest:() -> Unit,
     onSendWithdrawalRequest: (phoneNumber: String) -> Unit
 ) {
@@ -108,6 +109,7 @@ fun RewardAlertDialog(
                             countInterstitialAdsClick = countInterstitialAdsClick,
                             countRewardedAds = countRewardedAds,
                             countRewardedAdsClick = countRewardedAdsClick,
+                            referralLinkMoney = referralLinkMoney,
                             phoneNumber = phoneNumber.trim(),
                             onError = {
                                 errorMessage = it
@@ -133,6 +135,7 @@ private fun verifySendWithdrawalRequest(
     countRewardedAds: Int,
     countRewardedAdsClick: Int,
     achievementPrice: Double,
+    referralLinkMoney: Double,
     phoneNumber: String,
     onSendWithdrawalRequest: (phoneNumber: String) -> Unit,
     onError: (String) -> Unit
@@ -145,7 +148,8 @@ private fun verifySendWithdrawalRequest(
             countRewardedAdsClick = countRewardedAdsClick,
             countBannerAdsClick = 0,
             countBannerAds = 0,
-            achievementPrice = achievementPrice
+            achievementPrice = achievementPrice,
+            referralLinkMoney = referralLinkMoney
         ) < utils.min_price_withdrawal_request){
         onError("Минимальная сумма для вывода ${utils.min_price_withdrawal_request} рублей")
     }else if(phoneNumber.isEmpty()){

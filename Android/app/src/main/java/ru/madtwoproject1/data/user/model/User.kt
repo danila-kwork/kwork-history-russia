@@ -1,6 +1,7 @@
 package ru.madtwoproject1.data.user.model
 
 import com.google.firebase.database.DataSnapshot
+import ru.madtwoproject1.data.referral_link.model.ReferralLink
 import ru.madtwoproject1.data.utils.model.Utils
 
 fun userSumMoneyVersion2(
@@ -9,9 +10,10 @@ fun userSumMoneyVersion2(
     countInterstitialAdsClick: Int,
     countRewardedAds: Int,
     countRewardedAdsClick: Int,
-    countBannerAds: Int,
-    countBannerAdsClick: Int,
-    achievementPrice: Double
+    countBannerAds: Int = 0,
+    countBannerAdsClick: Int = 0,
+    achievementPrice: Double,
+    referralLinkMoney: Double
 ): Double {
     if(utils == null) return 0.0
 
@@ -21,7 +23,7 @@ fun userSumMoneyVersion2(
             countRewardedAdsClick * utils.rewarded_ads_click +
             countBannerAds * utils.banner_ads_price +
             countBannerAdsClick * utils.banner_ads_click_price +
-            achievementPrice
+            achievementPrice + referralLinkMoney
 }
 
 enum class UserRole {
@@ -54,7 +56,10 @@ data class User(
     val countInterestingFact: Int = 0,
     val countQuestion: Int = 0,
     val achievementPrice: Double = 0.0,
-    val achievementIds: List<AchievementId> = emptyList()
+    val referralLink: String? = null,
+    val achievementIds: List<AchievementId> = emptyList(),
+    val activeReferralLink: ReferralLink? = null,
+    val referralLinkMoney: Double = 0.0
 ) {
     fun dataMap(): MutableMap<String, Any> {
         val map = mutableMapOf<String,Any>()
@@ -73,12 +78,16 @@ data class User(
         map["countQuestion"] = countQuestion
         map["achievementIds"] = achievementIds
         map["achievementPrice"] = achievementPrice
+        map["referralLinkMoney"] = referralLinkMoney
 
         return map
     }
 }
 
 fun DataSnapshot.mapUser(): User {
+
+    val activeReferralLinkChild = child("activeReferralLink")
+
     return User(
         id = child("id").value.toString(),
         email = child("email").value.toString(),
@@ -96,5 +105,17 @@ fun DataSnapshot.mapUser(): User {
             AchievementId(it.child("id").value.toString())
         },
         achievementPrice = child("achievementPrice").value.toString().toDouble(),
+        referralLink = child("referralLink").value.toString(),
+        referralLinkMoney = if(child("referralLinkMoney").value.toString() == "null")
+            0.0
+        else
+            child("referralLinkMoney").value.toString().toDouble(),
+        activeReferralLink = if(activeReferralLinkChild.value == null)
+            null
+        else
+            ReferralLink(
+                id = activeReferralLinkChild.child("id").value.toString(),
+                userId = activeReferralLinkChild.child("userId").value.toString()
+            )
     )
 }

@@ -12,4 +12,5 @@ sealed class Screen(val route: String) {
     object AddAchievement: Screen("add_achievement_screen")
     object Ads: Screen("ads_screen")
     object AchievementAdmin: Screen("achievement_admin_screen")
+    object ReferralLink: Screen("referral_link_screen")
 }

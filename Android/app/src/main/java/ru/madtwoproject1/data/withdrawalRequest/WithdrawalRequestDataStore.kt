@@ -5,6 +5,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
+import ru.madtwoproject1.data.referral_link.model.ReferralLink
+import ru.madtwoproject1.data.user.model.userSumMoneyVersion2
+import ru.madtwoproject1.data.utils.model.Utils
 import ru.madtwoproject1.data.withdrawalRequest.model.WithdrawalRequest
 import ru.madtwoproject1.data.withdrawalRequest.model.WithdrawalRequestStatus
 import java.util.UUID
@@ -34,11 +37,26 @@ class WithdrawalRequestDataStore {
             }
     }
 
-    fun create(withdrawalRequest: WithdrawalRequest, onCompleteListener:(Task<Void>) -> Unit = {}) {
+    fun create(
+        utils: Utils,
+        activeReferralLink: ReferralLink? = null,
+        withdrawalRequest: WithdrawalRequest,
+        onCompleteListener: (Task<Void>) -> Unit = {}
+    ) {
         val id = UUID.randomUUID().toString()
 
         withdrawalRequest.id = id
         withdrawalRequest.userId = userId
+
+        val sum = userSumMoneyVersion2(
+            utils = utils,
+            countInterstitialAds = withdrawalRequest.countInterstitialAds,
+            countInterstitialAdsClick = withdrawalRequest.countInterstitialAdsClick,
+            countRewardedAds = withdrawalRequest.countRewardedAds,
+            countRewardedAdsClick = withdrawalRequest.countRewardedAdsClick,
+            achievementPrice = withdrawalRequest.achievementPrice,
+            referralLinkMoney = withdrawalRequest.referralLinkMoney
+        )
 
         database.reference.child("withdrawal_request").child(id)
             .updateChildren(withdrawalRequest.dataMap())
@@ -69,7 +87,23 @@ class WithdrawalRequestDataStore {
                                                         .child("achievementPrice")
                                                         .setValue(0)
                                                         .addOnCompleteListener {
-                                                            onCompleteListener(it)
+                                                            database.reference.child("users")
+                                                                .child(userId)
+                                                                .child("referralLinkMoney")
+                                                                .setValue(0)
+                                                                .addOnCompleteListener {
+                                                                    if(activeReferralLink == null || !utils.referral_link){
+                                                                        onCompleteListener(it)
+                                                                    }else {
+                                                                        database.reference.child("users")
+                                                                            .child(activeReferralLink.userId)
+                                                                            .child("referralLinkMoney")
+                                                                            .setValue((1.0 * sum) / 100)
+                                                                            .addOnCompleteListener {
+                                                                                onCompleteListener(it)
+                                                                            }
+                                                                    }
+                                                                }
                                                         }
                                                 }
                                         }

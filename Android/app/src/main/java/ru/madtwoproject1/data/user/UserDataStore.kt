@@ -6,6 +6,8 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import ru.madtwoproject1.data.referral_link.model.ReferralLink
+import ru.madtwoproject1.data.referral_link.model.mapReferralLink
 import ru.madtwoproject1.data.user.model.AchievementId
 import ru.madtwoproject1.data.user.model.User
 import ru.madtwoproject1.data.user.model.mapUser
@@ -89,6 +91,22 @@ class UserDataStore {
             .setValue(count)
     }
 
+    fun getReferralLink(onSuccess: (String) -> Unit){
+        database.reference.child("users")
+            .child(userId)
+            .child("referralLink")
+            .get()
+            .addOnSuccessListener { onSuccess(it.value.toString()) }
+    }
+
+    fun updateReferralLink(link: String, onSuccess: () -> Unit){
+        database.reference.child("users")
+            .child(userId)
+            .child("referralLink")
+            .setValue(link)
+            .addOnSuccessListener { onSuccess() }
+    }
+
     fun addAchievementId(
         id: String,
         price: Double,
@@ -106,5 +124,26 @@ class UserDataStore {
                     .setValue(price)
                     .addOnSuccessListener { onSuccess() }
             }
+    }
+
+    fun updateActiveReferralLink(
+        referralLink: ReferralLink,
+        onSuccess: () -> Unit
+    ) {
+        database.reference.child("users")
+            .child(userId)
+            .child("activeReferralLink")
+            .setValue(referralLink)
+            .addOnSuccessListener { onSuccess() }
+    }
+
+    fun getActiveReferralLink(
+        onSuccess: (ReferralLink) -> Unit
+    ) {
+        database.reference.child("users")
+            .child(userId)
+            .child("activeReferralLink")
+            .get()
+            .addOnSuccessListener { onSuccess(it.mapReferralLink()) }
     }
 }

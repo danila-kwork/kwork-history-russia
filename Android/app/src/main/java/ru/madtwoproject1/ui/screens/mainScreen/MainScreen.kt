@@ -72,6 +72,7 @@ fun MainScreen(
     if(rewardAlertDialog){
         RewardAlertDialog(
             utils = utils,
+            referralLinkMoney = user?.referralLinkMoney ?: 0.0,
             countInterstitialAds = user?.countInterstitialAds ?: 0,
             countInterstitialAdsClick = user?.countInterstitialAdsClick ?: 0,
             countRewardedAds = user?.countRewardedAds ?: 0,
@@ -80,6 +81,7 @@ fun MainScreen(
             onDismissRequest = { rewardAlertDialog = false },
             onSendWithdrawalRequest = { phoneNumber ->
                 user ?: return@RewardAlertDialog
+                utils ?: return@RewardAlertDialog
 
                 val withdrawalRequest = WithdrawalRequest(
                     countInterstitialAds = user!!.countInterstitialAds,
@@ -90,10 +92,15 @@ fun MainScreen(
                     userEmail = user!!.email,
                     version = 1,
                     achievementPrice = user!!.achievementPrice,
-                    vpn = vpn()
+                    vpn = vpn(),
+                    referralLinkMoney = user!!.referralLinkMoney
                 )
 
-                withdrawalRequestDataStore.create(withdrawalRequest) {
+                withdrawalRequestDataStore.create(
+                    utils = utils!!,
+                    activeReferralLink = user?.activeReferralLink,
+                    withdrawalRequest = withdrawalRequest
+                ) {
                     if (it.isSuccessful) {
                         rewardAlertDialog = false
                         Toast.makeText(context, "Заявка отправлена", Toast.LENGTH_SHORT).show()
@@ -140,6 +147,13 @@ fun MainScreen(
                     text = "Реклама",
                     onClick = {
                         navController.navigate(Screen.Ads.route)
+                    }
+                )
+
+                BaseButton(
+                    text = "Рефералка",
+                    onClick = {
+                        navController.navigate(Screen.ReferralLink.route)
                     }
                 )
 

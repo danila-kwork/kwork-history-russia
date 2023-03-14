@@ -14,7 +14,8 @@ data class Utils(
     val banner_ads_click_price: Double,
     val banner_ads_price: Double,
     val rewarded_yandex_ads_id: String,
-    val words_count: Int
+    val words_count: Int,
+    val referral_link: Boolean
 )
 
 fun DataSnapshot.mapUtils(): Utils {
@@ -31,5 +32,6 @@ fun DataSnapshot.mapUtils(): Utils {
         banner_ads_price = child("banner_ads_price").value.toString().toDouble(),
         banner_ads_click_price = child("banner_ads_click_price").value.toString().toDouble(),
         words_count = child("words_count").value.toString().toInt(),
+        referral_link = child("referral_link").value.toString().toBoolean(),
     )
 }

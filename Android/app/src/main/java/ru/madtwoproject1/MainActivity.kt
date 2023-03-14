@@ -21,6 +21,7 @@ import ru.madtwoproject1.ui.screens.authScreen.AuthScreen
 import ru.madtwoproject1.ui.screens.interestingFactScreen.InterestingFactScreen
 import ru.madtwoproject1.ui.screens.mainScreen.MainScreen
 import ru.madtwoproject1.ui.screens.questionsScreen.QuestionsScreen
+import ru.madtwoproject1.ui.screens.referralLinkScreen.ReferralLinkScreen
 import ru.madtwoproject1.ui.screens.settingsScreen.SettingsScreen
 import ru.madtwoproject1.ui.screens.withdrawalRequestsScreen.WithdrawalRequestsScreen
 import ru.madtwoproject1.ui.theme.HistoryTheme
@@ -84,6 +85,9 @@ class MainActivity : ComponentActivity() {
                     }
                     composable(Screen.AchievementAdmin.route){
                         AchievementAdminScreen()
+                    }
+                    composable(Screen.ReferralLink.route){
+                        ReferralLinkScreen(navController = navController)
                     }
                 }
             }

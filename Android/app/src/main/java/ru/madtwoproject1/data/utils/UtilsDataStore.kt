@@ -26,9 +26,9 @@ class UtilsDataStore {
             .addOnSuccessListener { onSuccess(it.value.toString().toInt()) }
     }
 
-    fun updateWordsCount(count:Int,onSuccess: () -> Unit) {
+    fun updateReferralLink(referralLink:Boolean, onSuccess: () -> Unit) {
 
-        database.reference.child("utils").child("words_count").setValue(count)
+        database.reference.child("utils").child("referral_link").setValue(referralLink)
             .addOnSuccessListener { onSuccess() }
     }
 
